@@ -64,7 +64,7 @@ curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -
 
 3. Update `/js/app.js` with `client_id` returned from OAuth 2.0 Registration and your Okta organization url
 
-```json
+```
   var client = new OktaAuth({
     uri: "https://org.oktapreview.com",
     clientId: 'IaBv2P521nkEC8IzaL45',
