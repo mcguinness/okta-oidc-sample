@@ -2,7 +2,7 @@
 
 Sample Single-Page Web App (SPA) for Okta OpenID Connect
 
-You can find the main javascript code in `/js/app.js`
+You can find the main javascript code in `/js/app.js` and html in `oidc.html`
 
 ## Sample Scenarios
 
@@ -84,3 +84,5 @@ $ http-server
 Starting up http-server, serving ./ on: http://0.0.0.0:8080
 Hit CTRL-C to stop the server
 ```
+
+5. Visit http://localhost:8080/oidc.html to launch the sample app
