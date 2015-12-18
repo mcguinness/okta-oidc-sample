@@ -8,6 +8,7 @@ requirejs.config({
 
 define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
 
+  var idp = '0oa1k5d68qR2954hb0g4';
   var client = new OktaAuth({
     uri: "http://rain.okta1.com:1802",
     clientId: 'w255HEWiSU4AuNxEjeij',
@@ -53,6 +54,24 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
       });
     });
 
+    $('#btn-idp').click(function() {
+      resetDisplay();
+      client.getIdToken({
+        scopes: ['openid', 'email', 'profile', 'phone'],
+        prompt: false,
+        idp: idp
+      })
+        .then(function(res) {
+          console.log('id_token: %s', res.id_token);
+          displayClaims(res.claims);
+        })
+        .fail(function(err) {
+          console.log(err);
+          $('div.login-box').append('<div class="error"><p>'+ err.message + '</p></div>');
+        })
+    });
+
+
     $('#btn-refresh').click(function() {
       resetDisplay();
       client.getIdToken({
@@ -69,20 +88,4 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
         })
     });
   });
-
-
-/* Social Auth
-  client.getIdToken({
-    scopes: ['openid', 'email'],
-    idp: '0oabmluDNh2JZi8lt0g4'
-  })
-  .then(function(res) {
-    console.log(res.id_token);
-    console.log(res.claims);
-  })
-  .fail(function(err) {
-    console.log(err);
-  })
-*/
-
 });

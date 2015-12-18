@@ -68,9 +68,9 @@ p.small {
 
 .login-box {
   background-color: white;
-  max-width: 340px;
+  width: 360px;
   margin: 0 auto;
-  margin-top: 120px;
+  margin-top: 140px;
   padding-bottom: 30px;
   border-radius: 5px;
   box-shadow: 0 5px 50px rgba(0,0,0,0.4);
@@ -83,22 +83,36 @@ p.small {
   border-radius: 5px 5px 0 0;
 }
 
+.login-box .form {
+  padding: 0 40px;
+  width: 260px;
+  margin: 0 auto;
+}
+
 .login-box label {
+  display: block;
+  width: 100%;
   font-weight: 700;
   font-size: .8em;
   color: #888;
   letter-spacing: 1px;
   text-transform: uppercase;
   line-height: 2em;
+  text-align: left;
 }
 
 .login-box input {
-  margin-bottom: 20px;
+  display: block;
+  vertical-align: middle;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 2px;
   font-size: .9em;
   color: #888;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 .login-box input:focus {
@@ -121,6 +135,9 @@ p.small {
   background-color: #D2AE80;
   cursor:pointer;
   outline: none;
+  display: block;
+  margin: 10px 0;
+  width: 100%;
 }
 
 .login-box button:hover {
@@ -151,6 +168,7 @@ p.small {
 
 .error p {
   color: red;
+  margin-top: 0;
 }
 
 .claims {

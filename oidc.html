@@ -34,17 +34,15 @@
           <div class="box-header">
             <h2>Okta Sign-In</h2>
           </div>
-          <label for="username">Username</label>
-          <br/>
-          <input type="text" id="username" required>
-          <br/>
-          <label for="password">Password</label>
-          <br/>
-          <input type="password" id="password" required>
-          <br/>
-          <button id="btn-sign-in" type="submit">Sign-In</button>
-          <button id="btn-refresh" type="submit">Refresh</button>
-          <br/>
+          <div class="form">
+            <label for="username">Username</label>
+            <input type="text" id="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <button id="btn-sign-in" type="submit" class="button">Sign-In with Password</button>
+            <button id="btn-idp" type="submit" class="button">Sign-In with IdP</button>
+            <button id="btn-refresh" type="submit" class="button">Refresh</button>
+          </div>
         </div>
       </div>
       <div id="claims" class="claims">
