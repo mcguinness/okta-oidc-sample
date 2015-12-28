@@ -78,7 +78,7 @@ p.small {
 }
 
 .login-box .box-header {
-  background-color: #D2AE80;
+  background-color: #F2373C;
   margin-top: 0;
   border-radius: 5px 5px 0 0;
 }
@@ -117,9 +117,9 @@ p.small {
 
 .login-box input:focus {
   outline: none;
-  border-color: #D2AE80;
+  border-color: #F2373C;
   transition: 0.5s;
-  color: #D2AE80;
+  color: #F2373C;
 }
 
 .login-box button {
@@ -132,7 +132,7 @@ p.small {
   font-weight: 400;
   font-size: 0.7em;
   letter-spacing: 1px;
-  background-color: #D2AE80;
+  background-color: #F2373C;
   cursor:pointer;
   outline: none;
   display: block;
@@ -151,7 +151,7 @@ p.small {
 }
 
 .selected {
-  color: #D2AE80!important;
+  color: #F2373C!important;
   transition: 0.5s;
 }
 
@@ -178,6 +178,6 @@ p.small {
 
 .claims .hljs {
   background: white;
-      border-radius: 5px;
-    box-shadow: 0 5px 50px rgba(0,0,0,0.4);
+  border-radius: 5px;
+  box-shadow: 0 5px 50px rgba(0,0,0,0.4);
 }

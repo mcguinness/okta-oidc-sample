@@ -8,10 +8,10 @@ requirejs.config({
 
 define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
 
-  var idp = '0oa1k5d68qR2954hb0g4';
+  var idp = '0oa5kecjfwuF4HQ4w0h7';
   var client = new OktaAuth({
-    uri: "http://rain.okta1.com:1802",
-    clientId: 'w255HEWiSU4AuNxEjeij',
+    uri: "https://example.oktapreview.com",
+    clientId: 'nntb2k2zwweytTJdJ6ej',
     redirectUri: window.location.href
   });
 
