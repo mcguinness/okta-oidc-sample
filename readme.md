@@ -21,6 +21,8 @@ See [postMessageCallback](https://github.com/mcguinness/okta-oidc-sample/blob/ma
 
 You can find the main javascript code and html in `widget.html`
 
+> The Okta Sign-In Widget is currently not working and waiting for some product changes
+
 ## Setup
 
 > This document assumes you host this app on `http://localhost:8080/`
@@ -52,7 +54,7 @@ You can find the main javascript code and html in `widget.html`
         "token_endpoint_auth_method": "none"
       }' 'https://example.oktapreview.com/oauth2/v1/clients'
     ```
-    
+
     ```json
     {
         "id": "pcac498beo7FGhJO80g4",
@@ -89,9 +91,9 @@ You can find the main javascript code and html in `widget.html`
         redirectUri: window.location.href
       });
     ```
-    
+
     > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as the OAuth 2.0 Client Registration `redirect_uris`
-    
+
 4. Update `widget.html` with `client_id` returned from OAuth 2.0 Registration and your Okta organization url
 
     ```
@@ -100,13 +102,13 @@ You can find the main javascript code and html in `widget.html`
         clientId: 'IaBv2P521nkEC8IzaL45',
         logo: '/images/acme_logo.png',
     ```
-    
+
     > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as the OAuth 2.0 Client Registration `redirect_uris`
 
 4. Start Web Server (e.g. http://localhost:8080/oidc.html")
 
     Quick and easy way to self-host is by installing [node.js](https://nodejs.org/en/download/) and the [http-server](https://www.npmjs.com/package/http-server) package which is a simple command-line web server
-    
+
     ```
     karl@guinness: ~/src/okta-oidc-sample
     $ http-server
@@ -114,4 +116,4 @@ You can find the main javascript code and html in `widget.html`
     Hit CTRL-C to stop the server
     ```
 
-5. Visit http://localhost:8080/oidc to launch the sample app with custom UI or http://localhost:8080/widget for the Okta Sign-In Widget sample app
+5. Visit http://localhost:8080/oidc to launch the sample app with custom UI
