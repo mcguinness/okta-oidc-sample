@@ -20,6 +20,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="css/widget-main.css">
 
+    <!-- Just some JQuery love -->
+    <script src="/js/jquery-2.1.4.min.js"></script>
+
     <!-- JSON Web Token Syntax Highlighting -->
     <script src="/js/highlight.min.js"></script>
     <link rel="stylesheet" href="css/highlight.min.css">
@@ -27,7 +30,11 @@
   <body>
 
     <!-- Render the login widget here -->
-    <div id="container"></div>
+    <div id="container">
+      <div id="widget"></div>
+      <div id="claims" class="claims"></div>
+    </div>
+
 
     <!-- Script to init the widget -->
     <script>
@@ -74,7 +81,7 @@
         {
           // Options - in this case, only el is necessary, but can override anything
           // in the config here as well
-          el: '#container',
+          el: '#widget',
           // Add Social IdPs (FACEBOOK, GOOGLE, or LINKEDIN)
           idps: [
             {
@@ -82,9 +89,7 @@
               id: '0oa5kecjfwuF4HQ4w0h7'
             }
           ],
-          authScheme: 'OAUTH2',
           authParams: {
-            responseType: 'id_token',
             scope: [
               'openid',
               'email',
@@ -96,15 +101,13 @@
         // when the recovery emails are sent (forgot password and unlock)
         function (res) {
           if (res.status === 'SUCCESS') {
-            /*
-              res.user - embedded user object returned in success response
-              res.session.token - sessionToken available if you want to handle
-                setting the okta session cookie manually
-              res.session.setCookieAndRedirect(redirectUrl) - helper function which
-                will navigate to the sessionCookieRedirect endpoint
-            */
-            console.log('User %s succesfully authenticated %o', res, res);
-            //res.session.setCookieAndRedirect(redirectUrl);
+            console.log('User %s succesfully authenticated %o', res.claims.email, res);
+            $('#widget').hide();
+            $('#claims').append('<pre><code class="json">' +
+              JSON.stringify(res.claims, null, '  ') + '</code></pre>');
+            $('pre code').each(function(i, block) {
+              hljs.highlightBlock(block);
+            });
           }
 
           else if (res.status === 'FORGOT_PASSWORD_EMAIL_SENT') {

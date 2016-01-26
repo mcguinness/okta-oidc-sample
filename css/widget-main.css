@@ -87,7 +87,7 @@ body {
 
 .claims {
   width: 500px;
-  margin: 0 auto;
+  margin: 100px auto 0;
 }
 
 .claims .hljs {
