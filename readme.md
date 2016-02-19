@@ -117,3 +117,21 @@ You can find the main javascript code and html in `widget.html`
     ```
 
 5. Visit http://localhost:8080/oidc to launch the sample app with custom UI
+
+## Social Authentication
+
+The Okta Sign-In Widget also supports Social Authentication.  You need to first add a Social IdP via the Okta Admin UI and obtain the `id` for the IdP which is found in the **Authorize URL** such as https://example.okta.com/oauth2/v1/authorize?idp=**0oabzpziblMwBLLqO0g4**.
+
+When initializing the the widget you then add the IdP as an additional param with the `id` and `type` (e.g. `FACEBOOK`, `GOOGLE`, or `LINKEDIN`) which controls the branding of the button
+
+```
+oktaSignIn.renderEl(
+{
+  idps: [
+    {
+      type: 'FACEBOOK',
+      id: '0oa5kecjfwuF4HQ4w0h7'
+    }
+  ]
+}
+```
