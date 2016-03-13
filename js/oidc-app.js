@@ -11,7 +11,7 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
   var idp = '0oa5kecjfwuF4HQ4w0h7';
   var client = new OktaAuth({
     uri: "https://example.oktapreview.com",
-    clientId: 'nntb2k2zwweytTJdJ6ej',
+    clientId: 'ANRZhyDh8HBFN5abN6Rg',
     redirectUri: window.location.href
   });
 
