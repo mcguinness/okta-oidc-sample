@@ -1,6 +1,6 @@
 # Overview
 
-Sample Single-Page Web App (SPA) for Okta OpenID Connect
+Sample Single-Page Web App (SPA) for Okta OpenID Connect (OIDC)
 
 ## Sample Scenarios
 
@@ -29,60 +29,18 @@ You can find the main javascript code and html in `widget.html`
 
 1. Grant the app [CORS access](http://developer.okta.com/docs/api/getting_started/enabling_cors.html) in your Okta organization
 
-2. Register OAuth 2.0 Client
+2. Create OpenID Connect Application in the Okta Admin UI
 
-    > Requires [API Token](http://developer.okta.com/docs/api/getting_started/getting_a_token.html)
+    1. Applications>Add Application
+    2. Click the "Create New App" button
+    3. Select "OpenID Connect" and click the "Create" button
+    4. Enter a name for the app such as "Sample OIDC App", select "Browser" as 5. App Type, and click "Next"
+    6. Add the following redirect URIs and click "Finish"
+        - "http://localhost:8080/oidc.html"
+        - "http://localhost:8080/widget.html"
+    7. Navigate to the Groups tab for the new app and assign the everyone group
 
-    ```sh
-    curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: SSWS XXXXXXXXXXXXXXXXXXXXXXXX" -H "Cache-Control: no-cache" -d '  {
-        "client_name": "Sample OpenID Connnect Web App",
-        "client_uri": "http://localhost:8080/",
-        "logo_uri": null,
-        "redirect_uris": [
-          "http://localhost:8080/",
-          "http://localhost:8080/oidc",
-          "http://localhost:8080/oidc.html",
-          "http://localhost:8080/widget",
-          "http://localhost:8080/widget.html"
-        ],
-        "response_types": [
-          "id_token"
-        ],
-        "grant_types": [
-          "implicit"
-        ],
-        "token_endpoint_auth_method": "none"
-      }' 'https://example.oktapreview.com/oauth2/v1/clients'
-    ```
-
-    ```json
-    {
-        "id": "pcac498beo7FGhJO80g4",
-        "created": "2015-12-16T06:19:21.000Z",
-        "lastUpdated": "2015-12-16T06:19:21.000Z",
-        "client_name": "Sample OpenID Connnect Web App",
-        "client_uri": "http://localhost:8080/",
-        "logo_uri": null,
-        "redirect_uris": [
-            "http://localhost:8080/",
-            "http://localhost:8080/oidc",
-            "http://localhost:8080/oidc.html",
-            "http://localhost:8080/widget",
-            "http://localhost:8080/widget.html"
-        ],
-        "response_types": [
-            "id_token"
-        ],
-        "grant_types": [
-            "implicit"
-        ],
-        "token_endpoint_auth_method": "none",
-        "client_id": "IaBv2P521nkEC8IzaL45",
-        "client_id_issued_at": 1450246761
-    }
-    ```
-
-3. Update `/js/oidc-app.js` with `client_id` returned from OAuth 2.0 Registration and your Okta organization url
+3. Update `/js/oidc-app.js` with `client_id` from your OIDC Application and your Okta organization url
 
     ```
       var client = new OktaAuth({
@@ -94,7 +52,7 @@ You can find the main javascript code and html in `widget.html`
 
     > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as the OAuth 2.0 Client Registration `redirect_uris`
 
-4. Update `widget.html` with `client_id` returned from OAuth 2.0 Registration and your Okta organization url
+4. Update `widget.html` with `client_id` from your OIDC Application and your Okta organization url
 
     ```
     var oktaSignIn = new OktaSignIn({
@@ -103,7 +61,7 @@ You can find the main javascript code and html in `widget.html`
         logo: '/images/acme_logo.png',
     ```
 
-    > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as the OAuth 2.0 Client Registration `redirect_uris`
+    > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as your OIDC Application Redirect URIs
 
 4. Start Web Server (e.g. http://localhost:8080/oidc.html")
 
