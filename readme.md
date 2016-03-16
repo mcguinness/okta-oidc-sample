@@ -36,7 +36,9 @@ You can find the main javascript code and html in `widget.html`
     3. Select "OpenID Connect" and click the "Create" button
     4. Enter a name for the app such as "Sample OIDC App", select "Browser" as 5. App Type, and click "Next"
     6. Add the following redirect URIs and click "Finish"
+        - "http://localhost:8080/oidc"
         - "http://localhost:8080/oidc.html"
+        - "http://localhost:8080/widget"
         - "http://localhost:8080/widget.html"
     7. Navigate to the Groups tab for the new app and assign the everyone group
 
