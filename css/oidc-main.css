@@ -28,7 +28,6 @@ h1#title span span {
 }
 
 h2 {
-  text-transform: uppercase;
   color: white;
   font-weight: 400;
   letter-spacing: 1px;
@@ -78,7 +77,7 @@ p.small {
 }
 
 .login-box .box-header {
-  background-color: #F2373C;
+  background-color: #2274A2;
   margin-top: 0;
   border-radius: 5px 5px 0 0;
 }
@@ -117,9 +116,9 @@ p.small {
 
 .login-box input:focus {
   outline: none;
-  border-color: #F2373C;
+  border-color: #2274A2;
   transition: 0.5s;
-  color: #F2373C;
+  color: #2274A2;
 }
 
 .login-box button {
@@ -128,11 +127,10 @@ p.small {
   border-radius: 2px;
   color: white;
   padding: 10px;
-  text-transform: uppercase;
   font-weight: 400;
-  font-size: 0.7em;
+  font-size: 0.9em;
   letter-spacing: 1px;
-  background-color: #F2373C;
+  background-color: #2274A2;
   cursor:pointer;
   outline: none;
   display: block;
@@ -168,7 +166,8 @@ p.small {
 
 .error p {
   color: red;
-  margin-top: 0;
+  margin-top: 5px;
+  padding: 0 5px;
 }
 
 .claims {
