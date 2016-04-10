@@ -52,7 +52,9 @@ p.small {
 
 /* Layout */
 .container {
-  margin: 0;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  max-width: 800px;
 }
 
 .top {
@@ -172,6 +174,15 @@ p.small {
 
 .claims {
   width: 500px;
+  margin: 0 auto;
+}
+.api-resources {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.api-resources img {
+  display: block;
   margin: 0 auto;
 }
 

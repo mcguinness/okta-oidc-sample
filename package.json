@@ -1,0 +1,20 @@
+{
+  "name": "oidc-api",
+  "version": "0.0.1",
+  "description": "Sample OpenID Connect id_token protected resource API",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karl McGuinness",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-okta-oidc-bearer": "git+ssh://git@github.com:mcguinness/passport-okta-oidc-bearer.git",
+    "yargs": "^4.4.0"
+  }
+}

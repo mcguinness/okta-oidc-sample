@@ -18,6 +18,7 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
   var resetDisplay = function() {
     $('div.error').remove();
     $('#claims').empty();
+    $('#api-resources').empty();
   };
 
   var displayClaims = function(claims) {
@@ -86,6 +87,26 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
     });
 
 
+    $('#btn-okta').click(function() {
+      resetDisplay();
+      client.idToken.authorize({
+        scopes: ['openid', 'email', 'profile', 'phone'],
+        prompt: false,
+        idp: idp
+      })
+        .then(function(res) {
+          console.log('id_token: %s', res.idToken);
+          displayClaims(res.claims);
+          localStorage.setItem('id_token', res.idToken);
+        })
+        .fail(function(err) {
+          console.log(err);
+          displayError(err.message);
+        })
+    });
+
+
+
     $('#btn-refresh').click(function() {
       resetDisplay();
       var idToken = localStorage.getItem('id_token');
@@ -96,12 +117,38 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
         .then(function(res) {
           console.log('id_token: %s', idToken);
           displayClaims(res.claims);
+          localStorage.setItem('id_token', res.idToken);
         })
         .fail(function(err) {
           console.log(err);
           displayError(err.message);
           localStorage.setItem('id_token', null);
         })
+    });
+
+
+    $('#btn-api-request').click(function() {
+      resetDisplay();
+      var idToken = localStorage.getItem('id_token');
+      if (!idToken) {
+        return displayError('You must first sign-in before you can refresh a token!');
+      }
+      $.ajax({
+          url : '/protected',
+          headers: {
+            Authorization: 'Bearer ' + idToken
+          },
+          processData : false,
+      }).done(function(b64data){
+        $('#api-resources').append('<img src="data:image/png;base64,' + b64data + '">');
+      }).fail(function(jqXHR, textStatus) {
+        var msg = 'Unable to fetch protected resource';
+        msg += '<br>' + jqXHR.status + ' ' + jqXHR.responseText;
+        if (jqXHR.status === 401) {
+          msg += '<br>Your token may be expired'
+        }
+        displayError(msg);
+      });
     });
   });
 });
