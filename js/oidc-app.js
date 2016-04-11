@@ -72,7 +72,8 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
       resetDisplay();
       client.idToken.authorize({
         scopes: ['openid', 'email', 'profile', 'phone'],
-        prompt: false,
+        prompt: 'login',
+        display:'popup',
         idp: idp
       })
         .then(function(res) {
