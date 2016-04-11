@@ -9,6 +9,8 @@ requirejs.config({
 
 define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaConfig) {
 
+  console.log('Okta Configuration: %o', OktaConfig);
+
   var client = new OktaAuth({
     url: OktaConfig.orgUrl,
     clientId: OktaConfig.clientId,
@@ -74,25 +76,6 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
         scopes: ['openid', 'email', 'profile', 'phone'],
         prompt: 'login',
         display:'popup',
-        idp: idp
-      })
-        .then(function(res) {
-          console.log('id_token: %s', res.idToken);
-          displayClaims(res.claims);
-          localStorage.setItem('id_token', res.idToken);
-        })
-        .fail(function(err) {
-          console.log(err);
-          displayError(err.message);
-        })
-    });
-
-
-    $('#btn-okta').click(function() {
-      resetDisplay();
-      client.idToken.authorize({
-        scopes: ['openid', 'email', 'profile', 'phone'],
-        prompt: false,
         idp: OktaConfig.idp
       })
         .then(function(res) {
@@ -105,8 +88,6 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
           displayError(err.message);
         })
     });
-
-
 
     $('#btn-refresh').click(function() {
       resetDisplay();
