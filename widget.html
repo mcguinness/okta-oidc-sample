@@ -12,11 +12,11 @@
     <![endif]-->
 
     <!-- Core Okta Sign-In Widget-->
-    <link href="http://rain.okta1.com:1802/js/sdk/okta-signin-widget/1.2.0/css/okta-sign-in-1.2.0.min.css" type="text/css" rel="stylesheet">
-    <script src="http://rain.okta1.com:1802/js/sdk/okta-signin-widget/1.2.0/js/okta-sign-in-1.2.0.min.js" type="text/javascript"></script>
+    <link href="https://example.oktapreview.com/js/sdk/okta-signin-widget/1.2.0/css/okta-sign-in-1.2.0.min.css" type="text/css" rel="stylesheet">
+    <script src="https://example.oktapreview.com/js/sdk/okta-signin-widget/1.2.0/js/okta-sign-in-1.2.0.min.js" type="text/javascript"></script>
 
     <!-- Customizable CSS options for Okta Sign-In Widget -->
-    <link href="http://rain.okta1.com:1802/js/sdk/okta-signin-widget/1.2.0/css/okta-theme-1.2.0.css" type="text/css" rel="stylesheet">
+    <link href="https://example.oktapreview.com/js/sdk/okta-signin-widget/1.2.0/css/okta-theme-1.2.0.css" type="text/css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="css/widget-main.css">
 
@@ -26,6 +26,9 @@
     <!-- JSON Web Token Syntax Highlighting -->
     <script src="/js/highlight.min.js"></script>
     <link rel="stylesheet" href="css/highlight.min.css">
+
+    <!-- Okta Configuration -->
+    <script src="/js/config.js"></script>
   </head>
   <body>
 
@@ -40,15 +43,16 @@
     <script>
       // Set initial config options for widget
       var oktaSignIn = new OktaSignIn({
-        baseUrl: 'http://rain.okta1.com:1802',
-        clientId: 'ANRZhyDh8HBFN5abN6Rg',
+        baseUrl: OktaConfig.orgUrl,
+        clientId: OktaConfig.clientId,
         logo: '/images/acme_logo.png',
 
         features: {
           securityImage: false,
           rememberMe: true,
           smsRecovery: true,
-          selfServiceUnlock: true
+          selfServiceUnlock: true,
+          multiOptionalFactorEnroll: true
         },
 
         helpLinks: {
@@ -86,7 +90,7 @@
           idps: [
             {
               type: 'FACEBOOK',
-              id: '0oa5kecjfwuF4HQ4w0h7'
+              id: OktaConfig.idp
             }
           ],
           authParams: {

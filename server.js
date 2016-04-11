@@ -9,7 +9,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var Strategy = require('passport-okta-oidc-bearer').Strategy;
-
+var OktaConfig = require('./js/config');
 
 /**
  * Globals
@@ -39,12 +39,14 @@ var argv = yargs
     issuer: {
       description: 'OpenID Connect Provider Issuer URL',
       required: true,
-      alias: 'iss'
+      alias: 'iss',
+      default: OktaConfig.orgUrl
     },
     audience: {
       description: 'ID Token Audience URI (ClientID)',
       required: true,
-      alias: 'aud'
+      alias: 'aud',
+      default: OktaConfig.clientId
     }
   })
   .example('\t$0 --iss https://example.okta.com --aud ANRZhyDh8HBFN5abN6Rg', '')

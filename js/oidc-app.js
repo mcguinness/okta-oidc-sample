@@ -2,16 +2,16 @@ requirejs.config({
     "baseUrl": "js",
     "paths": {
       "jquery": "jquery-2.1.4.min",
-      "okta-auth-sdk": "okta-auth-sdk-1.0.0.min"
+      "okta-auth-sdk": "okta-auth-sdk-1.0.0.min",
+      "okta-config": "config"
     }
 });
 
-define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
+define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaConfig) {
 
-  var idp = '0oa5kecjfwuF4HQ4w0h7';
   var client = new OktaAuth({
-    url: "https://example.oktapreview.com",
-    clientId: 'ANRZhyDh8HBFN5abN6Rg',
+    url: OktaConfig.orgUrl,
+    clientId: OktaConfig.clientId,
     redirectUri: window.location.href
   });
 
@@ -93,7 +93,7 @@ define(["jquery", "okta-auth-sdk"], function($, OktaAuth) {
       client.idToken.authorize({
         scopes: ['openid', 'email', 'profile', 'phone'],
         prompt: false,
-        idp: idp
+        idp: OktaConfig.idp
       })
         .then(function(res) {
           console.log('id_token: %s', res.idToken);

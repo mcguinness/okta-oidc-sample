@@ -10,8 +10,10 @@ You can find the main javascript code in `/js/oidc-app.js` and html in `oidc.htm
 
 This sample demonstrates the OpenID Connect implicit flow:
 
-- Sign-In: Authenticates user with [name/password](http://developer.okta.com/docs/api/resources/authn.html#primary-authentication-with-public-application) and exchanges a [sessionToken](http://developer.okta.com/docs/api/resources/authn.html#session-token) for an id_token (JWT) using a hidden iframe
-- Refresh: Attempts to use an existing session to obtain an id_token (JWT) using a hidden iframe
+- Sign in with Password: Authenticates user with [name/password](http://developer.okta.com/docs/api/resources/authn.html#primary-authentication-with-public-application) and exchanges a [sessionToken](http://developer.okta.com/docs/api/resources/authn.html#session-token) for an id_token (JWT) using a hidden iframe
+- Sign in with IdP: Authenticates user by redirecting to an external Identity Provider (IdP) such as [Facebook](https://developer.facebook.com) in a popup window and returns an id_token (JWT) for the user via a hidden iframe
+- Refresh Toke: Uses the current session with Okta to obtain a new id_token (JWT) via a hidden iframe
+- Request Protected Resource (API): Uses the `id_token` as an OAuth2 Bearer Access Token to request a protected resources from an API (you must first authenticate)
 
 These scenarios are enabled by the `okta_post_message` custom `response_mode` for the [OpenID Connect Authentication Request](http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest) which uses [HTML5 Window Messaging] (https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) and a hidden iframe to return the [id_token]  (http://openid.net/specs/openid-connect-core-1_0.html#AuthResponse) to the Single Page Web App (SPA) without refreshing or redirecting the page.
 
@@ -19,9 +21,17 @@ See [postMessageCallback](https://github.com/mcguinness/okta-oidc-sample/blob/ma
 
 #### OpenID Connect with Okta Sign-In Widget
 
+This sample demonstrates the OpenID Connect implicit flow with the Okta Sign-In Widget
+
 You can find the main javascript code and html in `widget.html`
 
 > The Okta Sign-In Widget is currently not working and waiting for some product changes
+
+## Prerequisites
+
+1. Install [node.js and npm](https://nodejs.org/en/download/) on your developer machine
+2. Clone this Github repository to a local working directory
+3. Run `npm install` from your local working directory to install all dependencies
 
 ## Setup
 
@@ -33,50 +43,32 @@ You can find the main javascript code and html in `widget.html`
 
     1. Applications>Add Application
     2. Click the "Create New App" button
-    3. Select "OpenID Connect" and click the "Create" button
-    4. Enter a name for the app such as "Sample OIDC App", select "Browser" as 5. App Type, and click "Next"
+    3. Select "Single Page App (SPA)" as the Platform
+    4. Select "OpenID Connect" and click the "Create" button
+    5. Enter a name for the app such as "Sample OIDC App" and click "Next"
     6. Add the following redirect URIs and click "Finish"
+        - "http://localhost:8080/"
         - "http://localhost:8080/oidc"
         - "http://localhost:8080/oidc.html"
-        - "http://localhost:8080/widget"
-        - "http://localhost:8080/widget.html"
-    7. Navigate to the Groups tab for the new app and assign the everyone group
+    7. Copy the "Client ID" for your new application
+    8. Navigate to the Groups tab for the new app and assign the everyone group
 
-3. Update `/js/oidc-app.js` with `client_id` from your OIDC Application and your Okta organization url
-
-    ```
-      var client = new OktaAuth({
-        uri: "https://org.oktapreview.com",
-        clientId: 'IaBv2P521nkEC8IzaL45',
-        redirectUri: window.location.href
-      });
-    ```
-
-    > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as the OAuth 2.0 Client Registration `redirect_uris`
-
-4. Update `widget.html` with `client_id` from your OIDC Application and your Okta organization url
+3. Update `/js/config.js` with your Okta organization URL and the `Client ID` you copied from your OIDC Application in step 7
 
     ```
-    var oktaSignIn = new OktaSignIn({
-        baseUrl: 'https://example.oktapreview.com',
-        clientId: 'IaBv2P521nkEC8IzaL45',
-        logo: '/images/acme_logo.png',
+    return {
+      orgUrl: 'https://example.oktapreview.com',
+      clientId: 'ANRZhyDh8HBFN5abN6Rg'
+    };
     ```
 
-    > This example assumes that the `redirectUri` is the url that the page is hosted on and matches the same value as your OIDC Application Redirect URIs
+4. Install NPM packages with `npm install`
 
-4. Start Web Server (e.g. http://localhost:8080/oidc.html")
+5. Start Web Server with `npm start`
 
-    Quick and easy way to self-host is by installing [node.js](https://nodejs.org/en/download/) and the [http-server](https://www.npmjs.com/package/http-server) package which is a simple command-line web server
+6. Visit http://localhost:8080/oidc.html to launch the "OpenID Connect Sample App"
 
-    ```
-    karl@guinness: ~/src/okta-oidc-sample
-    $ http-server
-    Starting up http-server, serving ./ on: http://0.0.0.0:8080
-    Hit CTRL-C to stop the server
-    ```
-
-5. Visit http://localhost:8080/oidc to launch the sample app with custom UI
+7. Visit http://localhost:8080/widget.html to launch the "Okta Sign-In Widget Sample App"
 
 ## Social Authentication
 
