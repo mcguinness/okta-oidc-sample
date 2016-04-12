@@ -46,7 +46,7 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
         switch(tx.status) {
           case 'SUCCESS':
             client.idToken.authorize({
-              scopes: ['openid', 'email', 'profile', 'phone'],
+              scope: OktaConfig.scope,
               sessionToken: tx.sessionToken
             })
               .then(function(res) {
@@ -73,9 +73,8 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
     $('#btn-idp').click(function() {
       resetDisplay();
       client.idToken.authorize({
-        scopes: ['openid', 'email', 'profile', 'phone'],
+        scope: OktaConfig.scope,
         prompt: 'login',
-        display:'popup',
         idp: OktaConfig.idp
       })
         .then(function(res) {
@@ -95,7 +94,9 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
       if (!idToken) {
         return displayError('You must first sign-in before you can refresh a token!');
       }
-      client.idToken.refresh(idToken)
+      client.idToken.refresh(idToken, {
+        scope: OktaConfig.scope
+      })
         .then(function(res) {
           console.log('id_token: %s', idToken);
           displayClaims(res.claims);
