@@ -2,7 +2,7 @@ requirejs.config({
     "baseUrl": "js",
     "paths": {
       "jquery": "jquery-2.1.4.min",
-      "okta-auth-sdk": "okta-auth-sdk-1.0.0.min",
+      "okta-auth-sdk": "OktaAuth.min",
       "okta-config": "config"
     }
 });
@@ -10,7 +10,7 @@ requirejs.config({
 define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaConfig) {
 
   console.log('Okta Configuration: %o', OktaConfig);
-
+  console.log(OktaAuth);
   var client = new OktaAuth({
     url: OktaConfig.orgUrl,
     clientId: OktaConfig.clientId,
