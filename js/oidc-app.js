@@ -94,7 +94,7 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
       if (!idToken) {
         return displayError('You must first sign-in before you can refresh a token!');
       }
-      client.idToken.refresh(idToken, {
+      client.idToken.refresh({
         scope: OktaConfig.scope
       })
         .then(function(res) {
