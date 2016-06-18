@@ -98,7 +98,7 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
         scope: OktaConfig.scope
       })
         .then(function(res) {
-          console.log('id_token: %s', idToken);
+          console.log('id_token: %s', res.dToken);
           displayClaims(res.claims);
           localStorage.setItem('id_token', res.idToken);
         })

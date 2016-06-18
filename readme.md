@@ -23,7 +23,7 @@ See [postMessageCallback](https://github.com/mcguinness/okta-oidc-sample/blob/ma
 
 This sample demonstrates the OpenID Connect implicit flow with the Okta Sign-In Widget
 
-You can find the main javascript code and html in `widget.html`
+You can find the main javascript code and html in `/js/widget-app.js` and html in `widget.html`
 
 ## Prerequisites
 
@@ -48,6 +48,7 @@ You can find the main javascript code and html in `widget.html`
         - "http://localhost:8080/"
         - "http://localhost:8080/oidc"
         - "http://localhost:8080/oidc.html"
+        - "http://localhost:8080/widget.html"
     7. Copy the **"Client ID"** for your new application
     8. Navigate to the Groups tab for the new app and assign the everyone group
 
