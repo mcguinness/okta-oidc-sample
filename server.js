@@ -8,7 +8,7 @@ var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var Strategy = require('passport-okta-oidc-bearer').Strategy;
+var Strategy = require('passport-oauth2-jwt-bearer').Strategy;
 var OktaConfig = require('./js/config');
 
 /**
@@ -68,6 +68,7 @@ app.use('/', express.static(__dirname));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 passport.use(new Strategy({
+  issuer: argv.issuer,
   audience: argv.audience,
   metadataUrl: url.resolve(argv.issuer, '/.well-known/openid-configuration'),
   loggingLevel: 'debug'
@@ -77,13 +78,13 @@ passport.use(new Strategy({
 }));
 
 app.get('/profile',
-  passport.authenticate('okta-oidc-bearer', { session: false }),
+  passport.authenticate('oauth2-jwt-bearer', { session: false }),
   function(req, res) {
     res.json(req.user);
   });
 
 app.get('/protected',
-  passport.authenticate('okta-oidc-bearer', { session: false }),
+  passport.authenticate('oauth2-jwt-bearer', { session: false }),
   function(req, res) {
     console.log('Accessing protected resource as ' + req.user.email);
     res.set('Content-Type', 'application/x-octet-stream');
