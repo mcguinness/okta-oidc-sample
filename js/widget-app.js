@@ -1,11 +1,13 @@
 requirejs.config({
     'baseUrl': 'js',
     'paths': {
-      'jquery': "jquery-2.1.4.min",
-      'okta-widget': 'https://example.oktapreview.com/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min',
+      'jquery': 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min',
+      'okta-widget': 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.8.0/js/okta-sign-in.min',
       'okta-config': 'config'
     }
 });
+
+var ID_TOKEN_KEY = 'id_token';
 
 define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaConfig) {
 
@@ -38,12 +40,14 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
     },
 
     // See dictionary of labels
-    labels: {
-      "primaryauth.title": "Acme Partner Login",
-      "primaryauth.username": "Partner ID",
-      "primaryauth.username.tooltip": "Enter your @example.com username",
-      "primaryauth.password": "Password",
-      "primaryauth.password.tooltip": "Super secret password"
+    i18n: {
+      en: {
+        "primaryauth.title": "Acme Partner Login",
+        "primaryauth.username": "Partner ID",
+        "primaryauth.username.tooltip": "Enter your @example.com username",
+        "primaryauth.password": "Password",
+        "primaryauth.password.tooltip": "Super secret password"
+      }
     },
 
     // Add Social IdPs (FACEBOOK, GOOGLE, or LINKEDIN)
@@ -55,7 +59,7 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
     ],
 
     authParams: {
-      scope: OktaConfig.scope
+      scopes: OktaConfig.scope
     }
   });
 
@@ -121,6 +125,8 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
     function (res) {
       if (res.status === 'SUCCESS') {
         console.log('User %s succesfully authenticated %o', res.claims.email, res);
+        oktaSignIn.tokenManager.add(ID_TOKEN_KEY, res);
+
         $('#widget').hide();
         $('#error').hide();
         displayClaims(res.claims);
@@ -139,21 +145,14 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
     // Error function - called when the widget experiences an unrecoverable error
     function (err) {
       // err is an Error object (ConfigError, UnsupportedBrowserError, etc)
-      displayError('Unexpected error authenticating user: ', + err);
+      displayError('Unexpected error authenticating user: ' + err.message);
     });
   }
 
   $('body').on('click', '#btn-refresh', function() {
-    oktaSignIn.idToken.refresh(
-      localStorage.getItem('id_token'),
-      function(res) {
-        console.log('id_token: %s', res.idToken);
-        displayClaims(res.claims);
-        localStorage.setItem('id_token', res.idToken);
-      }, {
-        scope: OktaConfig.scope
-      }
-    );
+    oktaSignIn.tokenManager.refresh(ID_TOKEN_KEY).then(function(token) {
+      displayClaims(token.claims);
+    })
   });
 
   $('body').on('click', '#btn-sign-in', function() {
@@ -162,11 +161,10 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
   });
 
   $('body').on('click', '#btn-sign-out', function() {
-    oktaSignIn.session.close();
-    localStorage.setItem('id_token', null);
-    window.location.reload();
-    //resetDisplay();
-    //$('#widget').show();
+    oktaSignIn.session.close(function() {
+      oktaSignIn.tokenManager.clear();
+      window.location.reload();
+      });
   });
 
   oktaSignIn.session.get(function(session) {
@@ -175,7 +173,7 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
       displayClaims(session);
       displayActions(true);
     } else {
-      console.log('user does not have an active session @%s', OktaConfig.orgUrl);
+      console.log('user does not have an active session @ %s', OktaConfig.orgUrl);
       renderWidget();
     }
   });

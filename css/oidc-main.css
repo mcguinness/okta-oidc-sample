@@ -104,7 +104,6 @@ p.small {
 
 .login-box input {
   display: block;
-  vertical-align: middle;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 2px;
@@ -112,6 +111,7 @@ p.small {
   color: #888;
   margin-bottom: 20px;
   width: 100%;
+  vertical-align: middle;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
@@ -150,9 +150,32 @@ p.small {
   transition: 0.5s;
 }
 
+.login-box button:disabled {
+  opacity: 0.3;
+  transition: 0.5s;
+  cursor: not-allowed;
+}
+
 .selected {
   color: #F2373C!important;
   transition: 0.5s;
+}
+
+.login-box .radio {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.login-box .radio input {
+  display: inline-block;
+  width: 30px;
+  vertical-align: inherit;
+}
+
+.login-box .radio label {
+  display: inline-block;
+  width: 170px;
 }
 
 /* Animation Delay */
@@ -173,7 +196,7 @@ p.small {
 }
 
 .claims {
-  width: 500px;
+  max-width: 800px;
   margin: 0 auto;
 }
 .api-resources {

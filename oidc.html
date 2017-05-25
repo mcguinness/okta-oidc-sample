@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>OpenID Connect Sample App</title>
+    <title>OpenID Connect + API Access Management Sample App</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -32,17 +32,25 @@
       </div>
       <div class="login-box animated fadeInUp">
         <div class="box-header">
-          <h2>OpenID Connect Sign In</h2>
+          <h2>Sign In</h2>
         </div>
         <div class="form">
           <label for="username">Username</label>
           <input type="text" id="username" required>
           <label for="password">Password</label>
           <input type="password" id="password" required>
+          <fieldset class="radiogroup">
+            <legend>Select token mode</legend>
+            <ul id="radio-mode" class="radio">
+              <li><input type="radio" name="mode" value="oidc" checked><label for="mode1">OIDC</label></li>
+              <li><input type="radio" name="mode" value="oauth"><label for="mode2">OIDC + API Access</label></li>
+            </ul>
+          </fieldset>
           <button id="btn-sign-in" type="submit" class="button">Sign in with Password</button>
           <button id="btn-idp" type="submit" class="button">Sign in with IdP</button>
-          <button id="btn-refresh" type="submit" class="button">Refresh Token</button>
-          <button id="btn-api-request" type="submit" class="button">Request Protected Resource (API)</button>
+          <button id="btn-refresh" type="submit" class="button">Refresh Tokens</button>
+          <button id="btn-api-request" type="submit" class="button" disabled>Request Protected Resource (API)</button>
+          <button id="btn-sign-out" type="submit" class="button">Sign Out</button>
         </div>
       </div>
     </div>

@@ -1,21 +1,39 @@
 requirejs.config({
     "baseUrl": "js",
     "paths": {
-      "jquery": "jquery-2.1.4.min",
-      "okta-auth-sdk": "OktaAuth.min",
+      "jquery": "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min",
+      "okta-auth-sdk": "https://ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.5.0/OktaAuth.min",
       "okta-config": "config"
     }
 });
 
+var ID_TOKEN_KEY = 'id_token';
+var ACCESS_TOKEN_KEY = 'access_token';
+var OIDC_MODE = 'oidc';
+var OAUTH_MODE = 'oauth';
+
 define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaConfig) {
 
   console.log('Okta Configuration: %o', OktaConfig);
-  console.log(OktaAuth);
+
   var client = new OktaAuth({
     url: OktaConfig.orgUrl,
     clientId: OktaConfig.clientId,
     redirectUri: window.location.href
   });
+
+  client.tokenManager.on('refreshed', function(key, token) {
+    if (key === ID_TOKEN_KEY) {
+      console.log('refreshed a new id_token');
+      displayClaims(token.claims);
+    } else if (key === ACCESS_TOKEN_KEY) {
+      console.log('refreshed a new access_token');
+    }
+  });
+
+  var useAuthorizationSever = function() {
+    return $('input[name=mode]:checked', '#radio-mode').val() === OAUTH_MODE;
+  }
 
   var resetDisplay = function() {
     $('div.error').remove();
@@ -37,22 +55,38 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
   }
 
   $(document).ready(function() {
+
+    $('input[name=mode]', '#radio-mode').change(function() {
+        $('#btn-api-request').prop('disabled', this.value == OIDC_MODE);
+    });
+
     $('#btn-sign-in').click(function() {
       resetDisplay();
+
       client.signIn({
         username: $('#username').val(),
         password: $('#password').val()
       }).then(function(tx) {
         switch(tx.status) {
           case 'SUCCESS':
-            client.idToken.authorize({
-              scope: OktaConfig.scope,
+            var scopes = OktaConfig.scopes.slice(0);
+            if (useAuthorizationSever()) {
+              scopes.push(OktaConfig.protectedScope);
+            }
+            client.token.getWithoutPrompt({
+              scopes: scopes,
+              responseType: ['id_token', 'token'],
               sessionToken: tx.sessionToken
+            }, {
+              issuer: useAuthorizationSever() ?
+                OktaConfig.authzIssuer :
+                OktaConfig.orgUrl
             })
               .then(function(res) {
-                console.log('id_token: %s', res.idToken);
-                displayClaims(res.claims);
-                localStorage.setItem('id_token', res.idToken);
+                console.log('tokens: %O', res);
+                displayClaims(res[0].claims);
+                client.tokenManager.add(ID_TOKEN_KEY, res[0]);
+                client.tokenManager.add(ACCESS_TOKEN_KEY, res[1]);
               })
               .fail(function(err) {
                 console.log(err);
@@ -60,7 +94,7 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
               })
             break;
           default:
-            throw 'We cannot handle the ' + tx.status + ' status';
+            throw 'Support for ' + tx.status + ' status is not implemented!';
         }
 
       }).fail(function(err) {
@@ -72,54 +106,50 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
 
     $('#btn-idp').click(function() {
       resetDisplay();
-      client.idToken.authorize({
-        scope: OktaConfig.scope,
-        prompt: 'login',
+      var scopes = OktaConfig.scopes.slice(0);
+      if (useAuthorizationSever()) {
+        scopes.push(OktaConfig.protectedScope);
+      }
+
+      client.token.getToken({
+        scopes: scopes,
+        responseType: ['id_token', 'token'],
         idp: OktaConfig.idp
+      }, {
+        issuer: useAuthorizationSever() ?
+          OktaConfig.authzIssuer :
+          OktaConfig.orgUrl
       })
         .then(function(res) {
-          console.log('id_token: %s', res.idToken);
-          displayClaims(res.claims);
-          localStorage.setItem('id_token', res.idToken);
+          console.log('tokens: %O', res);
+          displayClaims(res[0].claims);
+          client.tokenManager.add(ID_TOKEN_KEY, res[0]);
+          client.tokenManager.add(ACCESS_TOKEN_KEY, res[1]);
         })
         .fail(function(err) {
           console.log(err);
           displayError(err.message);
-        })
+        });
     });
 
     $('#btn-refresh').click(function() {
       resetDisplay();
-      var idToken = localStorage.getItem('id_token');
-      if (!idToken) {
-        return displayError('You must first sign-in before you can refresh a token!');
-      }
-      client.idToken.refresh({
-        scope: OktaConfig.scope
-      })
-        .then(function(res) {
-          console.log('id_token: %s', res.dToken);
-          displayClaims(res.claims);
-          localStorage.setItem('id_token', res.idToken);
-        })
-        .fail(function(err) {
-          console.log(err);
-          displayError(err.message);
-          localStorage.setItem('id_token', null);
-        })
+
+      client.tokenManager.refresh(ID_TOKEN_KEY);
+      client.tokenManager.refresh(ACCESS_TOKEN_KEY);
     });
 
 
     $('#btn-api-request').click(function() {
       resetDisplay();
-      var idToken = localStorage.getItem('id_token');
-      if (!idToken) {
-        return displayError('You must first sign-in before you can refresh a token!');
+      var token = client.tokenManager.get(ACCESS_TOKEN_KEY);
+      if (!token) {
+        return displayError('You must first sign-in before you can request a protected resource!');
       }
       $.ajax({
           url : '/protected',
           headers: {
-            Authorization: 'Bearer ' + idToken
+            Authorization: 'Bearer ' + token.accessToken
           },
           processData : false,
       }).done(function(b64data){
@@ -133,5 +163,13 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
         displayError(msg);
       });
     });
+
+    $('#btn-sign-out').click(function() {
+      resetDisplay();
+
+      client.tokenManager.clear();
+      client.session.close();
+    });
+
   });
 });
