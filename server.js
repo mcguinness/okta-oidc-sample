@@ -29,13 +29,13 @@ var argv = yargs
       default: 8080
     },
     issuer: {
-      description: 'Token Issuer URL',
+      description: 'Access Token Issuer URL',
       required: true,
       alias: 'iss',
       default: OktaConfig.orgUrl
     },
     audience: {
-      description: 'Token Audience URI',
+      description: 'Acceess Token Audience URI',
       required: true,
       alias: 'aud',
       default: OktaConfig.clientId
@@ -45,33 +45,49 @@ var argv = yargs
       required: true,
       alias: 'scp',
       default: OktaConfig.resourceScope
+    },
+    apiToken: {
+      description: 'Okta Organization SSWS API Token for Social IdP Callbacks',
+      required: true,
+      alias: 'ssws',
+      default: OktaConfig.apiToken
     }
   })
   .example('\t$0 --iss https://example.okta.com --aud ANRZhyDh8HBFN5abN6Rg', '')
   .argv;
 
+const issuerUrl = url.parse(argv.issuer);
+const metadataUrl = argv.issuer + '/.well-known/openid-configuration';
+const orgUrl = issuerUrl.protocol + '//' + issuerUrl.host + (issuerUrl.port ? ':' + issuerUrl.port : '');
+
 console.log();
 console.log('Listener Port:\n\t' + argv.port);
 console.log('Issuer URL:\n\t' + argv.issuer);
 console.log('Audience URI:\n\t' + argv.audience);
+console.log('Metadata URL:\n\t' + metadataUrl);
+console.log('Organization URL:\n\t' + orgUrl);
 console.log();
 
 /**
  * Globals
  */
 
-const metadataUrl = argv.issuer + '/.well-known/openid-configuration';
 const app = express();
 const httpServer = http.createServer(app);
 const imgString = new Buffer(
   fs.readFileSync(path.join(__dirname, './images/oauth2.png'))
 ).toString('base64');
-
+const sessionHandler = require('express-session')({
+  secret: 'if you don\t know, now you know',
+  resave: true,
+  saveUninitialized: true
+});
 
 /**
  * Middleware
  */
 app.set('port', argv.port);
+app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use('/', express.static(__dirname));
 app.use(bodyParser.json());
@@ -81,6 +97,76 @@ app.use(passport.initialize());
 /**
  * Routes
  */
+
+app.get('/social/callback', sessionHandler, function(req, res, next) {
+  const txId = req.query.tx_id;
+  console.log('Fetching IdP transaction %s', txId);
+  if (txId) {
+    request({
+      method: 'GET',
+      json: true,
+      uri: orgUrl + '/api/v1/idps/tx/' + txId + '/target',
+      headers: {
+        'authorization': 'SSWS ' + argv.apiToken
+      }
+    }, function(txErr, txRes, txBody) {
+      if (txErr || txRes.statusCode < 200 || txRes.statusCode >= 300) {
+        console.log('Unable to fetch IdP transaction %s due to HTTP Error: %s ', txId, txErr || txRes.statusCode);
+      } else {
+        console.log('IdP transaction: %j', txBody)
+        req.session.tx = {
+          id: txId,
+          profile: txBody.profile
+        }
+        return res.render('register', {
+          profile: txBody.profile,
+        });
+      }
+    });
+  }
+});
+
+app.post('/social/callback', [bodyParser.urlencoded({extended: false}), sessionHandler], function(req, res, next) {
+  if (req.session.tx) {
+    const txId = req.session.tx.id;
+    const profile = {
+      customerId: req.body.customerId,
+      streetAddress: req.body.streetAddress,
+      city: req.body.city,
+      zipCode: req.body.postalCode
+    };
+
+    console.log('Registering additional profile %j for IdP transaction %s', profile, txId);
+
+    request({
+      method: 'POST',
+      json: true,
+      uri: orgUrl + '/api/v1/idps/tx/' + txId + '/lifecycle/provision',
+      headers: {
+        'authorization': 'SSWS ' + argv.apiToken
+      },
+      body: {
+        profile: profile
+      }
+    }, function(txErr, txRes, txBody) {
+      if (txErr || txRes.statusCode < 200 || txRes.statusCode >= 300) {
+        console.log('Unable to fetch IdP transaction %s due to HTTP Error: %s ', txId, txErr || txRes.statusCode);
+      } else {
+        console.log('registration response %j', txBody);
+
+        if (txBody.status === 'SUCCESS') {
+          req.session.destroy();
+          return res.render('finish', {
+            url: orgUrl + '/api/v1/idps/tx/' + txId + '/finish',
+            sessionToken: txBody.sessionToken
+          });
+        } else {
+          return res.json(txBody);
+        }
+      }
+    });
+  }
+});
 
 app.get('/claims',
   passport.authenticate('oauth2-jwt-bearer', { session: false }),

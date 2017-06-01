@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Okta Sign-In Widget Sample</title>
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
+    <![endif]-->
+
+    <!-- Core widget js and css -->
+    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.11.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet">
+    <!-- Customizable css theme options. Link your own customized copy of this file or override styles in-line -->
+    <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.11.0/css/okta-theme.css" type="text/css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="css/widget-main.css">
+
+  </head>
+  <body>
+  <!-- Render the login widget here -->
+    <div id="container">
+      <div id="widget">
+        <div data-se="auth-container" id="okta-sign-in" class="auth-container main-container no-beacon">
+          <div class="okta-sign-in-header auth-header">
+            <img src="/images/acme_logo.png" class="auth-org-logo">
+            <div data-type="beacon-container" class="beacon-container"></div>
+          </div>
+          <div class="auth-content">
+            <div class="auth-content-inner">
+              <div class="primary-auth">
+                <form method="post" action="/social/callback" data-se="o-form" id="form" class="primary-auth-form o-form o-form-edit-mode">
+                  <div data-se="o-form-content" class="o-form-content o-form-theme clearfix">
+                    <h2 data-se="o-form-head" class="okta-form-title o-form-head">Registering <%= profile.displayName %></h2>
+                    <div class="o-form-error-container" data-se="o-form-error-container"></div>
+                    <div class="o-form-fieldset-container" data-se="o-form-fieldset-container">
+                      <div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+                        <div data-se="o-form-input-container" class="o-form-input">
+                          <span data-se="o-form-input-username" class="o-form-input-name-username o-form-control okta-form-input-field input-fix">
+                            <span class="icon input-icon person-16-gray"></span>
+                            <input type="text" placeholder="Customer ID" name="customerId" id="customerId" value="" autocomplete="off"></span>
+                        </div>
+                      </div>
+                      <div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+                        <div data-se="o-form-input-container" class="o-form-input">
+                          <span data-se="o-form-input-street-address" class="o-form-control okta-form-input-field input-fix">
+                            <input type="text" placeholder="Street Address" name="streetAddress" id="streetAddress" value="<%= profile.streetAddress %>" autocomplete="off"></span>
+                        </div>
+                      </div>
+                      <div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+                        <div data-se="o-form-input-container" class="o-form-input">
+                          <span data-se="o-form-input-city" class="o-form-control okta-form-input-field input-fix">
+                            <input type="text" placeholder="City" name="city" id="city" value="<%= profile.city %>" autocomplete="off"></span>
+                        </div>
+                      </div>
+                      <div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+                        <div data-se="o-form-input-container" class="o-form-input">
+                          <span data-se="o-form-input-postal-code" class="o-form-control okta-form-input-field input-fix">
+                            <input type="text" placeholder="Postal Code" name="postalCode" id="postalCode" value="<%= profile.zipCode %>" autocomplete="off"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="o-form-button-bar">
+                    <input class="button button-primary" type="submit" value="Create Account" data-type="save">
+                  </div>
+                </form>
+                <div class="auth-footer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="error" class="error center margin-top "></div>
+    </div>
+  </body>
+</html>

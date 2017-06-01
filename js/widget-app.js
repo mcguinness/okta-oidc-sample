@@ -59,7 +59,8 @@ define(['jquery', 'okta-widget', 'okta-config'], function($, OktaSignIn, OktaCon
     ],
 
     authParams: {
-      scopes: OktaConfig.scope
+      scopes: OktaConfig.scopes,
+      responseType: 'id_token'
     }
   });
 

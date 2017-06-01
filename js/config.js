@@ -10,10 +10,11 @@
 
     return {
       orgUrl: 'https://example.oktapreview.com',
+      apiToken: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       authzIssuer: 'https://example.oktapreview.com/oauth2/aus8q4gst8vbUGzFp0h7',
       clientId: 'ANRZhyDh8HBFN5abN6Rg',
-      idp: '0oa5kecjfwuF4HQ4w0h7',
-      scopes: ['openid', 'email', 'profile', 'phone', 'groups'],
+      idp: '0oa4ftg4vzKlWHHEJ0h7',
+      scopes: ['openid', 'email', 'profile', 'phone', 'address', 'groups'],
       protectedScope: 'api:read'
     };
 

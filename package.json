@@ -1,7 +1,7 @@
 {
-  "name": "oidc-api",
+  "name": "okta-oidc-sample",
   "version": "0.0.2",
-  "description": "Sample OpenID Connect id_token protected resource API",
+  "description": "Sample OpenID Connect Web Server",
   "private": true,
   "main": "server.js",
   "scripts": {
@@ -11,7 +11,9 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.0",
-    "express": "^4.13.4",
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
     "morgan": "^1.7.0",
     "passport": "https://github.com/mcguinness/passport.git",
     "passport-oauth2-jwt-bearer": "https://github.com/mcguinness/passport-oauth2-jwt-bearer.git",

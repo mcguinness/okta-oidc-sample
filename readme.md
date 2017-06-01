@@ -86,3 +86,44 @@ oktaSignIn.renderEl(
   ]
 }
 ```
+
+### Extending Social User Profiles with Callouts
+
+The sample application supports extending the user profile created via Social Authentication with a callout.
+
+#### API Token
+
+Update `/js/config.js` with an [API Token](https://developer.okta.com/docs/api/getting_started/getting_a_token.html) for your Okta Organization
+
+#### Social IdP Configuration
+
+1. Navigate to Security->Identity Providers
+2. Select your Identity Provider and click **Configure Identity Provider** in the **Configure** drop-down
+3. Select **Callout** in the **Provisioning Policy** drop-down
+4. Enter `http://localhost:8080/social/callback` for **Provisioning Callout URI**
+5. Select **HTTP-Redirect** in the **Provisioning Callout Binding** drop-down
+6. Click **Update Identity Provider** to save your changes
+
+> Ensure that "Update attributes for existing users" is not checked for profile mastering.
+
+#### Adding Custom Attribute & Mappings
+
+1. Navigate to Directory->Profile Editor
+2. Click **Profile** button for Okta User Profile
+3. Click **Add Attribute**
+4. Add the following properties and click **"Save"**
+    - Display name: Customer ID
+    - Variable name: customerId
+5. Go back to the Profile Editor via Directory->Profile Editor
+6. Select your OpenID Connect application and click **Profile** button
+7. Click **Add Attribute**
+8. Add the following properties and click **"Save"**
+    - Display name: Customer ID
+    - Variable name: customerId
+    - Scope: [X] User personal
+9. Click **Map Attributes**
+10. Add a new mapping for the `customerId` attribute and select the `customerId` attribute from the Okta User profile
+11. Change the mapping from "Apply mapping on user create only" to "Apply mapping on user create or update"
+12. Click **Save Mappings**
+13. Click **Apply Updates Now**
+
